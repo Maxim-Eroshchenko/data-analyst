@@ -8,7 +8,7 @@
 Также мы хотим создать таблицу, где будут балансы каждого **студента** за каждый день.
 
 https://disk.yandex.ru/i/7qQm2Mezkr-clQ
-
+```
 /* 1 * Узнаем, когда была первая транзакция для каждого студента. */ 
 
 with first_payments
@@ -19,7 +19,7 @@ with first_payments
      where status_name = 'success'
      group by user_id 
     )  
-    
+  
  /* 2 * Соберем таблицу с датами за каждый календарный день 2016 года. */   
  
 ,all_dates 
@@ -124,6 +124,6 @@ as (
         group by  dt
         order by  dt
        limit 10000
-
+```
 
 
