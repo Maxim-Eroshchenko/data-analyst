@@ -28,8 +28,12 @@
 
 
 
-Контактная информация
-email: maxim.eroschencko@gmail.com
-https://www.linkedin.com/in/maxim-eroschencko-44a154288/
-https://t.me/Maxim_Eroshchenko
+
+ ## ****Контактная информация :****
+
+### Email: **maxim.eroschencko@gmail.com**
+
+### Linkedin : **https://www.linkedin.com/in/maxim-eroschencko-44a154288/**
+
+### Telegramm : **https://t.me/Maxim_Eroshchenko**
 
