@@ -7,123 +7,107 @@
 
 Также мы хотим создать таблицу, где будут балансы каждого **студента** за каждый день.
 
-https://disk.yandex.ru/i/7qQm2Mezkr-clQ
+[https://disk.yandex.ru/i/7qQm2Mezkr-clQ](https://disk.yandex.ru/i/7qQm2Mezkr-clQ)
+
 ```
-<!-- /* 1 * Узнаем, когда была первая транзакция для каждого студента. */ -->
-
 with first_payments
- as ( 
-   select user_id
-        , min(transaction_datetime::date) as first_payment_date
-     from skyeng_db.payments
-     where status_name = 'success'
-     group by user_id 
-    )  
-  
- /* 2 * Соберем таблицу с датами за каждый календарный день 2016 года. */   
- 
-,all_dates 
-as ( 
-    select distinct date_trunc('day', class_start_datetime) as dt 
-        from skyeng_db.classes
-        where  date_part('year', class_start_datetime) = 2016
-    ) 
-            
- /* 3 * Узнаем, за какие даты имеет смысл собирать баланс для каждого студента. */
- 
-,all_dates_by_user 
-as ( 
-   select user_id 
-        , dt  
-        from first_payments  
-        join all_dates 
-        on dt >=  first_payment_date
-   )
-   
-/* 4 * Найдем все изменения балансов, связанные с успешными транзакциями. */ 
+   as ( 
+     select user_id
+          , min(transaction_datetime::date) as first_payment_date
+       from skyeng_db.payments
+       where status_name = 'success'
+       group by user_id 
+      )   
 
+,all_dates 
+   as ( 
+       select distinct date_trunc('day', class_start_datetime) as dt 
+           from skyeng_db.classes
+           where  date_part('year', class_start_datetime) = 2016
+       ) 
+             
+,all_dates_by_user 
+   as ( 
+      select user_id 
+           , dt  
+           from first_payments  
+           join all_dates 
+           on dt >=  first_payment_date
+      )
+   
 ,payments_by_dates 
-  as ( 
-     select user_id 
-           ,transaction_datetime::date as payment_date 
-           ,sum(classes) as transaction_balance_change
-        from skyeng_db.payments
-        where status_name = 'success'
-        and transaction_datetime::date < '2017-01-01'
-        group by user_id ,transaction_datetime::date  
-        order by user_id ,transaction_datetime::date
-      ) 
-/* 5 * Найдем баланс студентов, который сформирован только транзакциями. */  
+   as ( 
+      select user_id 
+            ,transaction_datetime::date as payment_date 
+            ,sum(classes) as transaction_balance_change
+         from skyeng_db.payments
+         where status_name = 'success'
+         and transaction_datetime::date < '2017-01-01'
+         group by user_id ,transaction_datetime::date  
+         order by user_id ,transaction_datetime::date
+       ) 
 
 ,payments_by_dates_cumsum 
- as (    
-    select dbu.user_id
-          ,dt
-          ,coalesce (transaction_balance_change ,0)  as    transaction_balance_change 
-          ,sum(coalesce (transaction_balance_change ,0)) over (partition by dbu.user_id order by dt)  transaction_balance_change_cs
-        from all_dates_by_user  dbu
-        left join payments_by_dates bpd
-        on dbu.user_id =  bpd.user_id
-        and dt = payment_date
-     ) 
+    as (    
+       select dbu.user_id
+             ,dt
+             ,coalesce (transaction_balance_change ,0)  as    transaction_balance_change 
+             ,sum(coalesce (transaction_balance_change ,0)) over (partition by dbu.user_id order by dt)  transaction_balance_change_cs
+           from all_dates_by_user  dbu
+           left join payments_by_dates bpd
+           on dbu.user_id =  bpd.user_id
+           and dt = payment_date
+        ) 
       
-/* 6 * Найдем изменения балансов из-за прохождения уроков.  */ 
-
 ,classes_by_dates 
- as ( 
-      select user_id
-            ,class_start_datetime::date as class_date
-            ,count(id_class) * -1 as classes
-        from skyeng_db.classes
-        where  class_start_datetime  < '2017-01-01'
-        and class_status in ('success', 'failed_by_student') 
-        and class_type <> 'trial' 
-        group by user_id , class_start_datetime::date
-     )
+     as ( 
+          select user_id
+                ,class_start_datetime::date as class_date
+                ,count(id_class) * -1 as classes
+            from skyeng_db.classes
+            where  class_start_datetime  < '2017-01-01'
+            and class_status in ('success', 'failed_by_student') 
+            and class_type <> 'trial' 
+            group by user_id , class_start_datetime::date
+         )
      
-/* 7 * По аналогии с уже проделанным шагом для оплат создадим CTE для хранения кумулятивной суммы количества пройденных уроков. */
-
 ,classes_by_dates_cumsum 
-as (
-    select  dbu.user_id
-           ,dbu.dt
-           ,coalesce(classes, 0) as classes
-           ,sum(coalesce(classes, 0)) over (partition by dbu.user_id order by dt) as classes_cs
-        from all_dates_by_user  dbu
-        left join classes_by_dates cbd 
-        on dbu.user_id = cbd.user_id 
-        and cbd.class_date = dbu.dt
-   ) 
-   
-/* 8 * Создадим CTE balances с вычисленными балансами каждого студента. */
+      as (
+          select  dbu.user_id
+                 ,dbu.dt
+                 ,coalesce(classes, 0) as classes
+                 ,sum(coalesce(classes, 0)) over (partition by dbu.user_id order by dt) as classes_cs
+              from all_dates_by_user  dbu
+              left join classes_by_dates cbd 
+              on dbu.user_id = cbd.user_id 
+              and cbd.class_date = dbu.dt
+         ) 
 
 ,balances
-as ( 
-    select a.user_id
-          ,a.dt
-          ,a.transaction_balance_change
-          ,a.transaction_balance_change_cs
-          ,b.classes
-          ,b.classes_cs
-          ,b.classes_cs + a.transaction_balance_change_cs as balance
-       from payments_by_dates_cumsum a
-       left join classes_by_dates_cumsum b
-       on a.user_id = b.user_id 
-       and a.dt = b.dt  
-    ) 
-               
-/* 9 * Посмотрим, как менялось общее количество уроков на балансах студентов: просуммируем поля.   */   
+      as ( 
+          select a.user_id
+                ,a.dt
+                ,a.transaction_balance_change
+                ,a.transaction_balance_change_cs
+                ,b.classes
+                ,b.classes_cs
+                ,b.classes_cs + a.transaction_balance_change_cs as balance
+             from payments_by_dates_cumsum a
+             left join classes_by_dates_cumsum b
+             on a.user_id = b.user_id 
+             and a.dt = b.dt  
+          ) 
 
-      select dt
-            ,sum(transaction_balance_change) as sum_transaction_balance_change
-            ,sum(transaction_balance_change_cs) as sum_transaction_balance_change_cs
-            ,sum(classes) as sum_classes
-            ,sum(classes_cs) as sum_classes_cs
-            ,sum(balance) as sum_balance
-        from balances
-        group by  dt
-        order by  dt
-       limit 10000
+  select dt
+          ,sum(transaction_balance_change) as sum_transaction_balance_change
+          ,sum(transaction_balance_change_cs) as sum_transaction_balance_change_cs
+          ,sum(classes) as sum_classes
+          ,sum(classes_cs) as sum_classes_cs
+          ,sum(balance) as sum_balance
+     from balances
+       group by  dt
+         order by  dt
+           limit 10000
 ```
 
 
