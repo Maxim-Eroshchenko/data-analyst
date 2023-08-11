@@ -14,3 +14,22 @@
 ### Инструменты для бизнеса: CRM 
 
 ### Онлайн-системы управления проектами:  Miro , Zoom, Trello. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Контактная информация
+email: maxim.eroschencko@gmail.com
+https://www.linkedin.com/in/maxim-eroschencko-44a154288/
+https://t.me/Maxim_Eroshchenko
+
