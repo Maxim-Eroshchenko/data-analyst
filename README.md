@@ -1,7 +1,8 @@
-### Портфолио: Аналитик данных 
+# Портфолио: Аналитик данных 
 
-### Привет! ![](https://user-images.githubusercontent.com/18350557/176309783-0785949b-9127-417c-8b55-ab5a4333674e.gif)
-#### Меня зовут Максим, я начинающий аналитик данных.  В этом репозитории вы сможете найти некоторые из моих проектов, выполненных во время обучения и практики. 
+####  ![](https://user-images.githubusercontent.com/18350557/176309783-0785949b-9127-417c-8b55-ab5a4333674e.gif) Привет!
+#### Меня зовут ``Максим``, я начинающий аналитик данных.  В этом репозитории вы сможете найти некоторые из моих проектов, выполненных во время обучения и практики. 
+<br> 
 
  ###  Навыки и технологии
 
@@ -16,17 +17,7 @@
 + ####  Онлайн-системы управления проектами:  ``Miro`` , ``Zoom`` , ``Trello``.
 
 
-
-
-
-
-
-
-
-
-
-
-
+<br> 
 
 
 
@@ -34,12 +25,12 @@
 
  
 
-#### Email: ****maxim.eroschencko@gmail.com****
++ #### Email: ****maxim.eroschencko@gmail.com****
 
 
 
-#### Linkedin: ****https://www.linkedin.com/in/maxim-eroschencko-44a154288/****
++ #### Linkedin: ****https://www.linkedin.com/in/maxim-eroschencko-44a154288/****
 
 
 
-#### Telegramm: ****https://t.me/Maxim_Eroshchenko****
++ #### Telegramm: ****https://t.me/Maxim_Eroshchenko****
