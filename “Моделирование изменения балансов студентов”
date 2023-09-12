@@ -9,7 +9,7 @@
 
 [https://disk.yandex.ru/i/7qQm2Mezkr-clQ](https://disk.yandex.ru/i/7qQm2Mezkr-clQ)
 
-```SQL
+```
 with first_payments
    as ( 
      select user_id
