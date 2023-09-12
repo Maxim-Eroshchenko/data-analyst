@@ -5,11 +5,7 @@
 ---------------------------------------------------------------------------------------------------------------------------------------
 
 ### Навыки и технологии
-#### - Инструменты анализа данных: Python <p align="left">
-<a href="https://www.python.org/" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/danielcranney/readme-generator/main/public/icons/skills/python-colored.svg" width="36" height="36" alt="Python" /></a>
-</p> , SQL <p align="left">
-<a href="https://www.postgresql.org/" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/danielcranney/readme-generator/main/public/icons/skills/postgresql-colored.svg" width="36" height="36" alt="PostgreSQL" /></a>
-</p>  , Excel, Google-sheets 
+#### - Инструменты анализа данных: Python, SQL, Excel, Google-sheets 
 #### - Системы управления базами данных: PostgreSQL 
 #### - Инструменты хранения, визуализации данных: Google-sheets , Metabase , Redash 
 #### - Инструменты для бизнеса: CRM
