@@ -44,7 +44,7 @@
  
 </ol>
 
-> <a href="https://disk.yandex.ru/i/0r_M8iD87rmHBw">Ссылка на проект</a>
+> <a href="https://disk.yandex.ru/i/0r_M8iD87rmHBw">Когортный анализ</a>
  
 <br> 
 
